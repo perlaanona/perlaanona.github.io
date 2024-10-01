@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset=”UTF-8”>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INEB-D</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5DC;
+            color: #4a148c;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            color: #6a1b9a;
+            margin-top: 20px;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-align: center;
+            color: #fbc02d;
+            margin-bottom: 40px;
+        }
+
+        .menu {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .menu a {
+            padding: 10px 20px;
+            background-color: #40E0D0;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .menu a:hover {
+            background-color: #F8BBD0;
+        }
+
+        .container {
+            display: none; /* Ocultar las secciones por defecto */
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #F8BBD0;
+            border-radius: 10px;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #f5f5DC;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #f4a261;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #f5f5DC;
+        }
+
+        .posts, .gallery, .links {
+            margin-top: 20px;
+        }
+
+        .post, .gallery-item {
+            background-color: #fefae0;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Instituto Nacional de Educación Básica y Diversificada "Sergio Leonel Celis Navas" J.V.</h1>
+    
+
+    <!-- Menú de opciones -->
+    <div class="menu">
+        <a href="#" onclick="showSection('commentsSection')">Comentarios</a>
+        <a href="#" onclick="showSection('gallerySection')">Galería</a>
+        <a href="#" onclick="showSection('linksSection')">Enlaces</a>
+        <a href="https://www.facebook.com/profile.php?id=100063559627992" target="_blank">Facebook</a>
+    </div>
+
+    <!-- Sección de comentarios -->
+    <div class="container" id="commentsSection">
+        <h3>Publica tu comentario</h3>
+        <textarea id="commentInput" placeholder="Escribe tu comentario..."></textarea>
+        <button type="button" onclick="addComment()">Publicar Comentario</button>
+
+        <h3>Comentarios publicados</h3>
+        <div class="posts" id="commentsContainer"></div>
+    </div>
+
+    <!-- Sección de galería -->
+    <div class="container" id="gallerySection">
+        <h3>Subir Imagen a la Galería</h3>
+        <input type="file" id="imageInput" accept="image/*">
+        <button type="button" onclick="addImage()">Subir Imagen</button>
+
+        <h3>Galería de imágenes</h3>
+        <div class="gallery" id="galleryContainer"></div>
+    </div>
+
+    <!-- Sección de enlaces -->
+    <div class="container" id="linksSection">
+        <h3>Agregar Enlace</h3>
+        <input type="text" id="linkURL" placeholder="Ingresa la URL del enlace">
+        <button type="button" onclick="addLink()">Publicar Enlace</button>
+
+        <h3>Lista de Enlaces</h3>
+        <div class="links" id="linksContainer"></div>
+    </div>
+
+    <script>
+        // Función para mostrar una sección y ocultar las demás
+        function showSection(section) {
+            // Oculta todas las secciones
+            document.getElementById('commentsSection').style.display = 'none';
+            document.getElementById('gallerySection').style.display = 'none';
+            document.getElementById('linksSection').style.display = 'none';
+
+            // Muestra la sección seleccionada
+            document.getElementById(section).style.display = 'block';
+        }
+
+        // Función para agregar un comentario
+        function addComment() {
+            const comment = document.getElementById('commentInput').value;
+            if (comment.trim() !== "") {
+                const commentsContainer = document.getElementById('commentsContainer');
+
+                const newComment = document.createElement('div');
+                newComment.className = 'post';
+                newComment.textContent = comment;
+
+                commentsContainer.appendChild(newComment);
+                document.getElementById('commentInput').value = "";
+
+                // Eliminar el comentario después de 15 minutos (900000 ms)
+                setTimeout(() => {
+                    commentsContainer.removeChild(newComment);
+                }, 900000);
+            }
+        }
+
+        // Función para agregar una imagen a la galería
+        function addImage() {
+            const imageInput = document.getElementById('imageInput');
+            const file = imageInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const galleryContainer = document.getElementById('galleryContainer');
+
+                    const newImage = document.createElement('div');
+                    newImage.className = 'gallery-item';
+                    newImage.innerHTML = `<img src="${e.target.result}" alt="Imagen subida">`;
+
+                    galleryContainer.appendChild(newImage);
+                    imageInput.value = "";
+
+                    // Eliminar la imagen después de 24 horas (86400000 ms)
+                    setTimeout(() => {
+                        galleryContainer.removeChild(newImage);
+                    }, 86400000);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Función para agregar un enlace
+        function addLink() {
+            const linkURL = document.getElementById('linkURL').value;
+            if (linkURL.trim() !== "") {
+                const linksContainer = document.getElementById('linksContainer');
+
+                const newLink = document.createElement('div');
+                newLink.className = 'link-item';
+                newLink.innerHTML = `<a href="${linkURL}" target="_blank">${linkURL}</a>`;
+
+                linksContainer.appendChild(newLink);
+                document.getElementById('linkURL').value = "";
+            }
+        }
+
+        // Mostrar por defecto la sección de comentarios al cargar la página
+        window.onload = function() {
+            showSection('commentsSection');
+        }
+    </script>
+
+</body>
+</html>
